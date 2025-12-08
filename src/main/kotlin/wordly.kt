@@ -1,15 +1,14 @@
-package main
-
 import java.io.File
 
 class WordlyGame {
     private var attempt = 6
     private var success = false
     private lateinit var word: String
+    private val russianWords = File("input.txt").readLines()
 
     fun start() {
         try {
-            val file = File("C:\\idea\\untitled\\src\\main\\resources\\input.txt").readLines().map { it.trim() }
+            val file = File("input.txt").readLines().map { it.trim() }
             word = file.random()
             while (word.length != 5) {
                 word = file.random()
@@ -38,6 +37,9 @@ class WordlyGame {
                 continue
             } else if (guess.firstOrNull { !it.isLetter() } != null) {
                 println("То, что ввели вы, словом не является. Введите слово из 5 букв.")
+                continue
+            }  else if (guess !in russianWords) {
+                println("Такого слова не существует. Пожалуйста, введите другое.")
                 continue
             }
             game(guess, word)
@@ -76,7 +78,7 @@ class WordlyGame {
         }
         attempt--
         if (attempt == 0) {
-            println("\n Попыток больше не осталось=( \n Загаданное слово было $word")
+            println("\nПопыток больше не осталось=( \nЗагаданное слово было \"$word\"")
             asking()
         } else {
             if (attempt > 4) {
@@ -100,7 +102,14 @@ class WordlyGame {
             println("\n ...Запускаем новую игру...")
             start()
         } else if (ans == "нет") {
-            println("\n ...Выход в главное меню...")
+            println("\n ...Выход в главное меню...\n")
         }
     }
 }
+
+
+fun main() {
+    System.setOut(java.io.PrintStream(System.out, true, "UTF-8"))
+    WordlyGame().start()
+}
+
