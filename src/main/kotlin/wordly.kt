@@ -4,11 +4,11 @@ class WordlyGame {
     private var attempt = 6
     private var success = false
     private lateinit var word: String
-    private val russianWords = File("input.txt").readLines()
+    private val russianWords = File("Файл с словами.txt").readLines()
 
     fun start() {
         try {
-            val file = File("input.txt").readLines().map { it.trim() }
+            val file = File("Файл с словами.txt").readLines().map { it.trim() }
             word = file.random()
             while (word.length != 5) {
                 word = file.random()
@@ -74,8 +74,20 @@ class WordlyGame {
         if (counter == 5) {
             success = true
             println("Поздравляем, вы угадали слово \"$word\"!")
+
+            val record: String = File("input.txt").readText()
+            var record1: Int = record.toInt()
+            if (6 - attempt < record1) {
+                println("Вы установили новый личный рекорд! " +
+                        "За ${6 - attempt} попыток вы смогли догадаться до данного слова=)")
+                record1 = 6 - attempt
+                File("input.txt").writeText(record1.toString())
+            } else {
+                println("Ваш рекорд по этой игре: $record")
+            }
             asking()
         }
+
         attempt--
         if (attempt == 0) {
             println("\nПопыток больше не осталось=( \nЗагаданное слово было \"$word\"")
@@ -92,14 +104,14 @@ class WordlyGame {
     }
 
     private fun asking() {
-        println("\n Хотите сыграть еще раз?")
+        println("\n Хотите сыграть еще раз и побить свой рекорд?")
         println("Напишите «да» или «нет» (без кавычек)")
 
         val ans = readLine()?.trim()?.lowercase()
         if (ans == "да") {
             attempt = 6
             success = false
-            println("\n ...Запускаем новую игру...")
+            println("\n ...Запускаем новую игру...\n")
             start()
         } else if (ans == "нет") {
             println("\n ...Выход в главное меню...\n")
